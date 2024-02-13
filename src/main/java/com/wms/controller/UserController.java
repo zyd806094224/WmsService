@@ -44,7 +44,7 @@ public class UserController {
         userService.removeById(id);
     }
 
-    //模糊查询
+    //模糊查询 匹配
     @PostMapping("/listP")
     public List<User> listP(@RequestBody User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
