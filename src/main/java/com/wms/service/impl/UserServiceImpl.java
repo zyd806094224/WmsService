@@ -1,5 +1,7 @@
 package com.wms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wms.entity.User;
 import com.wms.mapper.UserMapper;
@@ -18,5 +20,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<User> listAll() {
         return userMapper.listAll();
+    }
+
+    @Override
+    public IPage<User> pageC(IPage<User> page) {
+        return userMapper.pageC(page);
+    }
+
+    @Override
+    public IPage<User> pageCC(IPage<User> page, Wrapper wrapper) {
+        return userMapper.pageCC(page,wrapper);
     }
 }
