@@ -2,6 +2,7 @@ package com.wms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wms.common.QueryPageParam;
 import com.wms.common.Result;
@@ -50,10 +51,12 @@ public class UserController {
 
     //模糊查询 匹配
     @PostMapping("/listP")
-    public List<User> listP(@RequestBody User user) {
+    public Result listP(@RequestBody User user) {
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(User::getName, user.getName());
-        return userService.list(lambdaQueryWrapper);
+        if (StringUtils.isNotBlank(user.getName())) {
+            lambdaQueryWrapper.like(User::getName, user.getName());
+        }
+        return Result.success(userService.list(lambdaQueryWrapper));
     }
 
     //分页
@@ -69,13 +72,13 @@ public class UserController {
 
     //自定义分页
     @PostMapping("/listPageC")
-    public List<User> listPageC(@RequestBody QueryPageParam param) {
+    public Result listPageC(@RequestBody QueryPageParam param) {
         Page<User> page = new Page();
         page.setCurrent(param.getPageNum());
         page.setSize(param.getPageSize());
 
         IPage<User> result = userService.pageC(page);
-        return result.getRecords();
+        return Result.success(result.getRecords(), result.getTotal());
     }
 
     //自定义分页2
@@ -110,8 +113,19 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        String sex = "";
+        try {
+            sex = (String) param.getParam().get("sex");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.like(User::getName, name);
+        if (StringUtils.isNotBlank(name)) {
+            lambdaQueryWrapper.like(User::getName, name);
+        }
+        if (StringUtils.isNotBlank(sex)) {
+            lambdaQueryWrapper.eq(User::getSex, sex);
+        }
         IPage<User> result = userService.pageCC(page, lambdaQueryWrapper);
         return Result.success(result.getRecords(), result.getTotal());
     }
