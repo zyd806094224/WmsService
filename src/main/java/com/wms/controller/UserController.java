@@ -25,10 +25,29 @@ public class UserController {
 //        return userService.listAll();
     }
 
+    //id查找
+    @GetMapping("/findByNo")
+    public Result findByNo(@RequestParam String no){
+        List<User> list = userService.lambdaQuery().eq(User::getNo, no).list();
+        return list.size() > 0 ? Result.success(list) : Result.fail();
+    }
+
     //新增
     @PostMapping("/save")
-    public void save(@RequestBody User user) {
-        userService.save(user);
+    public Result save(@RequestBody User user) {
+        return userService.save(user)? Result.success() : Result.fail();
+    }
+
+    //更新
+    @PostMapping("/update")
+    public Result update(@RequestBody User user) {
+        return userService.updateById(user)? Result.success() : Result.fail();
+    }
+
+    //删除
+    @GetMapping("/del")
+    public Result del(@RequestParam String id){
+        return userService.removeById(id)? Result.success() : Result.fail();
     }
 
     //修改
