@@ -27,7 +27,7 @@ public class UserController {
 
     //id查找
     @GetMapping("/findByNo")
-    public Result findByNo(@RequestParam String no){
+    public Result findByNo(@RequestParam String no) {
         List<User> list = userService.lambdaQuery().eq(User::getNo, no).list();
         return list.size() > 0 ? Result.success(list) : Result.fail();
     }
@@ -35,19 +35,27 @@ public class UserController {
     //新增
     @PostMapping("/save")
     public Result save(@RequestBody User user) {
-        return userService.save(user)? Result.success() : Result.fail();
+        return userService.save(user) ? Result.success() : Result.fail();
     }
 
     //更新
     @PostMapping("/update")
     public Result update(@RequestBody User user) {
-        return userService.updateById(user)? Result.success() : Result.fail();
+        return userService.updateById(user) ? Result.success() : Result.fail();
     }
 
     //删除
     @GetMapping("/del")
-    public Result del(@RequestParam String id){
-        return userService.removeById(id)? Result.success() : Result.fail();
+    public Result del(@RequestParam String id) {
+        return userService.removeById(id) ? Result.success() : Result.fail();
+    }
+
+    //登录
+    @PostMapping("/login")
+    public Result login(@RequestBody User user) {
+        List<User> list = userService.lambdaQuery().eq(User::getNo, user.getNo())
+                .eq(User::getPassword, user.getPassword()).list();
+        return list.size() > 0 ? Result.success(list.get(0)) : Result.fail();
     }
 
     //修改
