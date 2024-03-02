@@ -20,7 +20,7 @@ public class MenuController {
 
     @GetMapping("/list")
     public Result list(@RequestParam String roleId) {
-        List<Menu> list = menuService.lambdaQuery().eq(Menu::getMenuRight, roleId).list();
+        List<Menu> list = menuService.lambdaQuery().like(Menu::getMenuRight, roleId).list();
         return Result.success(list);
     }
 }
