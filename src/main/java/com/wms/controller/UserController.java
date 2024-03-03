@@ -161,12 +161,21 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        String roleId = "";
+        try {
+            roleId = (String) param.getParam().get("roleId");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(name)) {
             lambdaQueryWrapper.like(User::getName, name);
         }
         if (StringUtils.isNotBlank(sex)) {
             lambdaQueryWrapper.eq(User::getSex, sex);
+        }
+        if (StringUtils.isNotBlank(roleId)) {
+            lambdaQueryWrapper.eq(User::getRoleId, roleId);
         }
         IPage<User> result = userService.pageCC(page, lambdaQueryWrapper);
         return Result.success(result.getRecords(), result.getTotal());
