@@ -40,3 +40,12 @@ INSERT INTO `menu` VALUES (2,'002','用户管理','1',NULL,'User','0,1','user/Us
 COMMIT;
 
 #以上创建菜单表脚本
+
+#新建仓库表
+DROP TABLE IF EXISTS `storage`;
+CREATE TABLE `storage` (
+`id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+`name` varchar(100) NOT NULL COMMENT '仓库名',
+`remark` varchar(1000) DEFAULT NULL COMMENT '备注',
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
