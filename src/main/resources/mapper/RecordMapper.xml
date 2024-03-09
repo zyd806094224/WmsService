@@ -8,8 +8,8 @@
                (select u.name from user u where u.id=a.userid)username,
                (select u.name from user u where u.id=a.admin_id)adminname
         from record a ,goods b,storage c,goodsType d
-             where a.goods=b.id
-             and b.storage=c.id and b.goodsType=d.id
+             /*where a.goods=b.id
+             and b.storage=c.id and b.goodsType=d.id*/
             ${ew.customSqlSegment}
     </select>
 </mapper>

@@ -1,6 +1,6 @@
 package com.wms.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,18 +34,19 @@ public class RecordController {
         page.setCurrent(query.getPageNum());
         page.setSize(query.getPageSize());
 
-        LambdaQueryWrapper<Record> lambdaQueryWrapper = new LambdaQueryWrapper();
-        /*if (StringUtils.isNotBlank(name) && !"null".equals(name)) {
-            lambdaQueryWrapper.like(Record::getName, name);
+        QueryWrapper<Record> queryWrapper = new QueryWrapper();
+        queryWrapper.apply(" a.goods=b.id and b.storage=c.id and b.goodsType=d.id ");//拼接sql
+        if (StringUtils.isNotBlank(name) && !"null".equals(name)) {
+            queryWrapper.like("b.name", name);
         }
-        if (StringUtils.isNotBlank(storage) && !"null".equals(storage)) {
+        /*if (StringUtils.isNotBlank(storage) && !"null".equals(storage)) {
             lambdaQueryWrapper.eq(Record::getStorage, storage);
         }
         if (StringUtils.isNotBlank(goodsType) && !"null".equals(goodsType)) {
             lambdaQueryWrapper.eq(Record::getGoodsType, goodsType);
         }*/
 
-        IPage result = recordService.pageCC(page, lambdaQueryWrapper);
+        IPage result = recordService.pageCC(page, queryWrapper);
         return Result.success(result.getRecords(), result.getTotal());
     }
 }
