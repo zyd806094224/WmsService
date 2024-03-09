@@ -39,12 +39,12 @@ public class RecordController {
         if (StringUtils.isNotBlank(name) && !"null".equals(name)) {
             queryWrapper.like("b.name", name);
         }
-        /*if (StringUtils.isNotBlank(storage) && !"null".equals(storage)) {
-            lambdaQueryWrapper.eq(Record::getStorage, storage);
+        if (StringUtils.isNotBlank(storage) && !"null".equals(storage)) {
+            queryWrapper.eq("c.id", storage);
         }
         if (StringUtils.isNotBlank(goodsType) && !"null".equals(goodsType)) {
-            lambdaQueryWrapper.eq(Record::getGoodsType, goodsType);
-        }*/
+            queryWrapper.eq("d.id", goodsType);
+        }
 
         IPage result = recordService.pageCC(page, queryWrapper);
         return Result.success(result.getRecords(), result.getTotal());
