@@ -55,3 +55,15 @@ CREATE TABLE `goodsType` (
   `remark` varchar(1000) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+#物品表
+DROP TABLE IF EXISTS `goods`;
+CREATE TABLE `goods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(100) NOT NULL COMMENT '货名',
+  `storage` int(11) NOT NULL COMMENT '仓库id',
+  `goodsType` int(11) NOT NULL COMMENT '分类',
+  `count` int(11) DEFAULT NULL COMMENT '数量',
+  `remark` varchar(1000) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
