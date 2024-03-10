@@ -62,6 +62,10 @@ public class RecordController {
         if ("2".equals(record.getAction())) {
             num = -num;
             record.setCount(num);
+        } else if ("3".equals(record.getAction())) { //新增物品或者修改已有物品的记录 数量直接覆盖
+            goods.setCount(record.getCount());
+            goodsService.updateById(goods);
+            return recordService.save(record) ? Result.success() : Result.fail();
         }
         int resNum = goods.getCount() + num;
         goods.setCount(resNum);

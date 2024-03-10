@@ -24,13 +24,13 @@ public class GoodsController {
     //新增
     @PostMapping("/save")
     public Result save(@RequestBody Goods goods) {
-        return goodsService.save(goods) ? Result.success() : Result.fail();
+        return goodsService.save(goods) ? Result.success(goods) : Result.fail();
     }
 
     //更新
     @PostMapping("/update")
     public Result update(@RequestBody Goods goods) {
-        return goodsService.updateById(goods) ? Result.success() : Result.fail();
+        return goodsService.updateById(goods) ? Result.success(goods) : Result.fail();
     }
 
     //删除
