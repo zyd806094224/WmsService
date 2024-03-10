@@ -34,6 +34,8 @@ public class RecordController {
         String name = (String) param.get("name");
         String storage = (String) param.get("storage");
         String goodsType = (String) param.get("goodsType");
+        String userId = (String) param.get("userId");
+        String roleId = (String) param.get("roleId");
 
         Page<Record> page = new Page();
         page.setCurrent(query.getPageNum());
@@ -41,6 +43,10 @@ public class RecordController {
 
         QueryWrapper<Record> queryWrapper = new QueryWrapper();
         queryWrapper.apply(" a.goods=b.id and b.storage=c.id and b.goodsType=d.id ");//拼接sql
+
+        if("2".equals(roleId)){ //普通用户 只能查看自己的操作记录
+            queryWrapper.apply(" a.userid= " + userId);
+        }
         if (StringUtils.isNotBlank(name) && !"null".equals(name)) {
             queryWrapper.like("b.name", name);
         }
