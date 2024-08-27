@@ -13,6 +13,7 @@ import com.wms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,12 +63,12 @@ public class UserController {
         List<User> list = userService.lambdaQuery()
                 .eq(User::getNo, user.getNo())
                 .eq(User::getPassword, user.getPassword()).list();
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             User user1 = list.get(0);
             List<Menu> menuList = menuService.lambdaQuery().like(Menu::getMenuRight, user1.getRoleId()).list();
-            HashMap res = new HashMap();
+            HashMap<String, Object> res = new HashMap<>();
             res.put("user", user1);
-            res.put("menu", menuList);
+            res.put("menu", menuList.isEmpty() ? new ArrayList<Menu>() : menuList);
             return Result.success(res);
         }
         return Result.fail();
