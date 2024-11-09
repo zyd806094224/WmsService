@@ -3,8 +3,10 @@ package com.wms.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class User {
+public class User implements Serializable {
     private int id;
     private String no;
     private String name;
