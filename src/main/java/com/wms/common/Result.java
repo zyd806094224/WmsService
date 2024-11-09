@@ -13,6 +13,9 @@ public class Result {
     public static Result fail() {
         return result(400, "失败", 0L, null);
     }
+    public static Result fail(int code, String msg) {
+        return result(code, msg, 0L, null);
+    }
 
     public static Result success() {
         return result(200, "成功", 0L, null);

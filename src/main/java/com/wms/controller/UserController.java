@@ -6,16 +6,23 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wms.common.QueryPageParam;
 import com.wms.common.Result;
+import com.wms.entity.LoginUser;
 import com.wms.entity.Menu;
 import com.wms.entity.User;
 import com.wms.service.MenuService;
 import com.wms.service.UserService;
+import com.wms.utils.JwtUtil;
+import com.wms.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/user")
@@ -25,6 +32,12 @@ public class UserController {
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @GetMapping("/list")
     public List<User> list() {
@@ -58,8 +71,8 @@ public class UserController {
     }
 
     //登录
-    @PostMapping("/login")
-    public Result login(@RequestBody User user) {
+    @PostMapping("/login1")
+    public Result login1(@RequestBody User user) {
         List<User> list = userService.lambdaQuery()
                 .eq(User::getNo, user.getNo())
                 .eq(User::getPassword, user.getPassword()).list();
@@ -73,6 +86,31 @@ public class UserController {
         }
         return Result.fail();
     }
+
+    @PostMapping("/login")
+    public Result login(@RequestBody User user) {
+        //AuthenticationManager authenticate进行用户认证
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getNo(),user.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        //如果认证没通过，给出对应的提示
+        if(Objects.isNull(authenticate)){
+            throw new RuntimeException("登录失败");
+        }
+        //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
+        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+        User user1 = loginUser.getUser();
+        String userid = user1.getId() + "";
+        String jwt = JwtUtil.createJWT(userid);
+        //把完整的用户信息存入redis  userid作为key
+        redisCache.setCacheObject("login:"+userid,loginUser);
+        List<Menu> menuList = menuService.lambdaQuery().like(Menu::getMenuRight, user1.getRoleId()).list();
+        HashMap<String,Object> res = new HashMap<>();
+        res.put("user", user1);
+        res.put("menu", menuList);
+        res.put("token",jwt);
+        return Result.success(res);
+    }
+
 
     //修改
     @PostMapping("/mod")
