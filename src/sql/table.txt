@@ -37,6 +37,21 @@ COMMIT;
 
 #以上创建菜单表脚本
 
+DROP TABLE IF EXISTS `role_permissions`;
+CREATE TABLE `role_permissions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `role_id` INT NOT NULL,
+  `role_name` VARCHAR(255) NOT NULL,
+  `permissions` TEXT, -- 如果权限是简单的列表，可以使用TEXT类型存储
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+BEGIN;
+INSERT INTO `role_permissions` (`role_id`, `role_name`, `permissions`) VALUES
+(0, 'admin', 'sys_admin'),
+(1, '管理员', 'sys_manager'),
+(2, '普通用户', 'sys_normal');
+COMMIT;
+
 #以下新建仓库表
 DROP TABLE IF EXISTS `storage`;
 CREATE TABLE `storage` (
