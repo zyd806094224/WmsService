@@ -5,7 +5,7 @@ id       int auto_increment comment '主键'
 primary key,
 no       varchar(20)       null comment '账号',
 name     varchar(100)      not null comment '名字',
-password varchar(20)       not null comment '密码',
+password varchar(60)       not null comment '密码',
 age      int               null,
 sex      int               null comment '性别',
 phone    varchar(20)       null comment '电话',
@@ -37,6 +37,7 @@ COMMIT;
 
 #以上创建菜单表脚本
 
+#以下角色对应的权限表
 DROP TABLE IF EXISTS `role_permissions`;
 CREATE TABLE `role_permissions` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -51,6 +52,7 @@ INSERT INTO `role_permissions` (`role_id`, `role_name`, `permissions`) VALUES
 (1, '管理员', 'sys_manager'),
 (2, '普通用户', 'sys_normal');
 COMMIT;
+#以上角色对应的权限表
 
 #以下新建仓库表
 DROP TABLE IF EXISTS `storage`;
