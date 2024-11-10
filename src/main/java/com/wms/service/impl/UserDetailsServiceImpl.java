@@ -40,8 +40,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if(Objects.isNull(user)){
             throw new RuntimeException("用户名或者密码错误");
         }
-//        RolePermissions rolePermissions = rolePermissionsService.lambdaQuery()
-//                .eq(RolePermissionssions::getRoleId, user.getRoleId()).one();
         LambdaQueryWrapper<RolePermissions> rpQueryWrapper = new LambdaQueryWrapper<>();
         rpQueryWrapper.eq(RolePermissions::getRoleId,user.getRoleId());
         RolePermissions rolePermissions = rolePermissionsMapper.selectOne(rpQueryWrapper);
