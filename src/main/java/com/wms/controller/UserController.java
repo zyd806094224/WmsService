@@ -11,6 +11,7 @@ import com.wms.entity.Menu;
 import com.wms.entity.User;
 import com.wms.service.MenuService;
 import com.wms.service.UserService;
+import com.wms.utils.JwtTokenManager;
 import com.wms.utils.JwtUtil;
 import com.wms.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class UserController {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private JwtTokenManager jwtTokenManager;
 
     @GetMapping("/list")
     public List<User> list() {
@@ -99,10 +103,15 @@ public class UserController {
         //如果认证通过了，使用userid生成一个jwt jwt存入ResponseResult返回
         LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
         User user1 = loginUser.getUser();
-        String userid = user1.getId() + "";
-        String jwt = JwtUtil.createJWT(userid);
+        String userId = user1.getId() + "";
+        String jwtTokenByUserId = jwtTokenManager.getJwtTokenByUserId(userId); //redis中获取是否用户有历史token
+        if(org.springframework.util.StringUtils.hasText(jwtTokenByUserId)){
+            jwtTokenManager.addTokenToBlacklist(jwtTokenByUserId);  //之前这个userId登录的账号有历史token ，token加入黑名单
+        }
+        String jwt = JwtUtil.createJWT(userId);
+        jwtTokenManager.addJwtTokenByUserId(userId,jwt); //用户登录对应的有效新token存入redis
         //把完整的用户信息存入redis  userid作为key
-        redisCache.setCacheObject("login:"+userid,loginUser);
+        redisCache.setCacheObject("login:"+userId,loginUser);
         List<Menu> menuList = menuService.lambdaQuery().like(Menu::getMenuRight, user1.getRoleId()).list();
         HashMap<String,Object> res = new HashMap<>();
         res.put("user", user1);

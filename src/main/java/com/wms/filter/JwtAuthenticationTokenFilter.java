@@ -1,6 +1,7 @@
 package com.wms.filter;
 
 import com.wms.entity.LoginUser;
+import com.wms.utils.JwtTokenManager;
 import com.wms.utils.JwtUtil;
 import com.wms.utils.RedisCache;
 import io.jsonwebtoken.Claims;
@@ -24,6 +25,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private JwtTokenManager jwtTokenManager;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //获取token
@@ -32,6 +36,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             //放行
             filterChain.doFilter(request, response);
             return;
+        }
+        if (jwtTokenManager.tokenOnTheBlacklist(token)) {
+            throw new RuntimeException("token黑名单"); //token黑名单，被踢
         }
         //解析token
         String userid;
@@ -45,13 +52,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //从redis中获取用户信息
         String redisKey = "login:" + userid;
         LoginUser loginUser = redisCache.getCacheObject(redisKey);
-        if(Objects.isNull(loginUser)){
+        if (Objects.isNull(loginUser)) {
             throw new RuntimeException("用户未登录");
         }
         //存入SecurityContextHolder
         //TODO 获取权限信息封装到Authentication中
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUser,null,loginUser.getAuthorities());
+                new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         //放行
         filterChain.doFilter(request, response);
