@@ -112,10 +112,8 @@ public class UserController {
         jwtTokenManager.addJwtTokenByUserId(userId,jwt); //用户登录对应的有效新token存入redis
         //把完整的用户信息存入redis  userid作为key
         redisCache.setCacheObject("login:"+userId,loginUser);
-        List<Menu> menuList = menuService.lambdaQuery().like(Menu::getMenuRight, user1.getRoleId()).list();
         HashMap<String,Object> res = new HashMap<>();
         res.put("user", user1);
-        res.put("menu", menuList);
         res.put("token",jwt);
         return Result.success(res);
     }

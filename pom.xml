@@ -25,6 +25,11 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.33</version>
         </dependency>
+        <!--<dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version> &lt;!&ndash; 使用最新版本 &ndash;&gt;
+        </dependency>-->
         <!--jwt依赖-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -110,7 +115,7 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.wms.WmsApplication</mainClass>
-                    <skip>true</skip>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>

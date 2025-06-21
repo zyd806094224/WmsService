@@ -12,8 +12,20 @@ phone    varchar(20)       null comment '电话',
 role_id  int               null comment '角色 0超级管理员，1管理员，2普通账号',
 isValid  varchar(4) default 'Y' null comment '是否有效，Y有效，其他无效'
 )
-charset = utf8;
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
 #以上创建用户表脚本
+
+#以下消息记录表
+CREATE TABLE IF NOT EXISTS `sms` (
+    `id` INT NOT NULL AUTO_INCREMENT COMMENT '消息唯一标识ID',
+    `phonenumber` VARCHAR(20) NOT NULL COMMENT '手机号码',
+    `content` TEXT NOT NULL COMMENT '消息内容',
+    `sendtime` DATETIME NOT NULL COMMENT '发送时间',
+    `destcode` VARCHAR(50) NOT NULL COMMENT '目标代码',
+    `sequenceid` VARCHAR(100) NOT NULL COMMENT '序列ID',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='消息记录表';
+#以上消息记录表
 
 #以下创建菜单表脚本
 create table menu
