@@ -13,6 +13,17 @@ role_id  int               null comment '角色 0超级管理员，1管理员，
 isValid  varchar(4) default 'Y' null comment '是否有效，Y有效，其他无效'
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+INSERT INTO user (no, name, password, age, sex, phone, role_id, isValid)
+VALUES (
+    'admin',
+    '超级管理员',
+    '$2a$10$N7XIb6kj2/MXOeZl61O8fecYnLSud4.oUJd90XwOjtb.hsjyQUfHa',
+    30,
+    0,
+    '18611785026',
+    0,
+    DEFAULT  -- 显式使用默认值'Y'[1,2](@ref)
+);
 #以上创建用户表脚本
 
 #以下消息记录表
